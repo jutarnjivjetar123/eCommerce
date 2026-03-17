@@ -1,5 +1,6 @@
 using eCommerce.Services;
 using eCommerce.Services.Database;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -22,8 +23,10 @@ builder.Services.AddDbContext<eCommerceContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
-builder.Services.AddTransient<IProductsService, ProductsService>();
+builder.Services.AddMapster();
 
+builder.Services.AddTransient<IProductsService, ProductsService>();
+builder.Services.AddTransient<IUsersService, UsersService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

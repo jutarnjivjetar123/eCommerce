@@ -1,5 +1,7 @@
 ﻿using eCommerce.Model;
+using eCommerce.Model.SearchObjects;
 using eCommerce.Services.Database;
+using MapsterMapper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,31 +12,33 @@ using System.Threading.Tasks;
 namespace eCommerce.Services
 {
     public class ProductsService(
-            eCommerceContext dbContext
+            eCommerceContext dbContext,
+            IMapper mapper
         ) : IProductsService
     {
 
         private readonly eCommerceContext _dbContext = dbContext;
-        
-        public List<Model.Products> GetList()
+        private readonly IMapper _mapper = mapper;
+
+
+        public List<Model.Products> GetList(ProductsSearchObject searchObject)
         {
-            var list = _dbContext.Products.ToList();
+            List<Model.Products> result = new();
 
-            var result = new List<Model.Products>();
-            foreach (var item in list)
-            {
-                result.Add(
-                        new Model.Products
-                        {
-                            ProductId = item.ProductId,
-                            Name = item.Name,
-                            Price = item.Price
+            var query = _dbContext.Products.AsQueryable();
 
-                        }
+
+            if (!string.IsNullOrWhiteSpace(searchObject.FTS)) {
+
+                query = query.Where(
+                        x => x.Name.Contains(searchObject.FTS) ||
+                        x.Code.Contains(searchObject.FTS)
                     );
             }
 
-            
+            var list = query.ToList();
+
+            result = _mapper.Map(list, result);
 
             return result;
         }

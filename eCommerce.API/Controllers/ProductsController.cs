@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using eCommerce.Model;
 using eCommerce.Services;
+using eCommerce.Model.SearchObjects;
 namespace eCommerce.API.Controllers
 {
     [Route("api/[controller]")]
@@ -18,10 +19,10 @@ namespace eCommerce.API.Controllers
 
 
         [HttpGet]
-        public List<Products> GetList()
+        public List<Products> GetList([FromQuery] ProductsSearchObject searchObject)
         {
 
-            return _service.GetList();
+            return _service.GetList(searchObject);
 
         }
     }
