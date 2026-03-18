@@ -12,7 +12,7 @@ namespace eCommerce.Services
     public interface IUsersService
     {
 
-        public List<Users> GetList(UsersSearchObject searchObject);
+        public PagedResult<Model.Users> GetList(UsersSearchObject searchObject);
         public Model.Users Insert(UsersInsertRequest request);
         public Model.Users Update(int id, UsersUpdateRequest request);
     }

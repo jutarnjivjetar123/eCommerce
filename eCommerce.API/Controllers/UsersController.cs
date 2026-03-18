@@ -1,4 +1,5 @@
-﻿using eCommerce.Model.Requests;
+﻿using eCommerce.Model;
+using eCommerce.Model.Requests;
 using eCommerce.Model.SearchObjects;
 using eCommerce.Services;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +17,7 @@ namespace eCommerce.API.Controllers
 
 
         [HttpGet]
-        public List<Model.Users> GetList([FromQuery] UsersSearchObject searchObject) {
+        public PagedResult<Model.Users> GetList([FromQuery] UsersSearchObject searchObject) {
 
             return _service.GetList(searchObject);
         }

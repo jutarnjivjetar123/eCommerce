@@ -27,6 +27,9 @@ builder.Services.AddMapster();
 
 builder.Services.AddTransient<IProductsService, ProductsService>();
 builder.Services.AddTransient<IUsersService, UsersService>();
+builder.Services.AddTransient<IProductCategoriesService, ProductCategoriesService>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

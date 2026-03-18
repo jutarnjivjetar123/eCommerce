@@ -13,6 +13,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
 
 namespace eCommerce.Services
 {
@@ -26,10 +27,10 @@ namespace eCommerce.Services
         private readonly eCommerceContext _dbContext = dbContext;
         private readonly IMapper _mapper = mapper;
         
-        public virtual List<Model.Users> GetList(UsersSearchObject searchObject)
+        public virtual Model.PagedResult<Model.Users> GetList(UsersSearchObject searchObject)
         {
 
-            List<Model.Users> result = new List<Model.Users>();
+            List<Model.Users> resultList = new List<Model.Users>();
 
             var query = _dbContext.Users.AsQueryable();
 
@@ -50,6 +51,9 @@ namespace eCommerce.Services
                 query = query.Where(x => x.Username == searchObject.Username);
             }
 
+
+            int count = query.Count();
+
             if (searchObject.IsUserRolesIncluded == true) {
                 query = query.Include(x => x.UserRoles).ThenInclude(x => x.Role);
             }
@@ -58,11 +62,22 @@ namespace eCommerce.Services
                 query = query.Skip(searchObject.Page.Value * searchObject.PageSize.Value).Take(searchObject.PageSize.Value);
             }
 
+            if (!string.IsNullOrWhiteSpace(searchObject.OrderBy)) {
+                query = query.OrderBy(searchObject.OrderBy);
+            }
+
+            
+
             var list = query.ToList();
             
             
-            result = _mapper.Map(list, result);
-            return result;
+            resultList = _mapper.Map(list, resultList);
+
+            Model.PagedResult<Model.Users> response = new();
+
+            response.ResultList = resultList;
+            response.Count = count;
+            return response;
         }
 
         public Model.Users Insert(UsersInsertRequest request)
@@ -111,5 +126,7 @@ namespace eCommerce.Services
 
             return _mapper.Map<Model.Users>(entity);
         }
+
+        
     }
 }

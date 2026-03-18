@@ -4,9 +4,9 @@ using System.Text;
 
 namespace eCommerce.Model.SearchObjects
 {
-    public class ProductsSearchObject
+    public class ProductCategoriesSearchObject
     {
-        public string? FTS { get; set; }
+        public string? NameGTE { get; set; }
 
         public int? Page { get; set; }
 
