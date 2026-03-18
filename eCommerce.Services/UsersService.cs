@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -48,8 +49,14 @@ namespace eCommerce.Services
             if (!string.IsNullOrWhiteSpace(searchObject.Username)) { 
                 query = query.Where(x => x.Username == searchObject.Username);
             }
-            
 
+            if (searchObject.IsUserRolesIncluded == true) {
+                query = query.Include(x => x.UserRoles).ThenInclude(x => x.Role);
+            }
+
+            if (searchObject.Page.HasValue && searchObject.PageSize.HasValue) {
+                query = query.Skip(searchObject.Page.Value * searchObject.PageSize.Value).Take(searchObject.PageSize.Value);
+            }
 
             var list = query.ToList();
             

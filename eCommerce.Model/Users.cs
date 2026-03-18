@@ -21,5 +21,7 @@ namespace eCommerce.Model
         public string Username { get; set; } = null!;
 
         public bool? Status { get; set; }
+
+        public virtual ICollection<UserRoles> UserRoles { get; set; } = new List<UserRoles>();
     }
 }
