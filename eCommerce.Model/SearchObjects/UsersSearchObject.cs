@@ -4,7 +4,8 @@ using System.Text;
 
 namespace eCommerce.Model.SearchObjects
 {
-    public class UsersSearchObject
+    // Ensure UsersSearchObject inherits from BaseSearchObject to satisfy the generic constraint in IService<TModel, TSearch>
+    public class UsersSearchObject : BaseSearchObject
     {
         public string? FirstNameGTE { get; set; }
 
@@ -15,10 +16,6 @@ namespace eCommerce.Model.SearchObjects
         public string? Username { get; set; }
 
         public bool? IsUserRolesIncluded { get; set; }
-
-        public int? Page { get; set; }
-
-        public int? PageSize { get; set; }
 
         public string? OrderBy { get; set; }
     }

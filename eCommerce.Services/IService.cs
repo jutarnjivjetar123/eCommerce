@@ -1,5 +1,4 @@
 ﻿using eCommerce.Model;
-using eCommerce.Model.SearchObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace eCommerce.Services
 {
-    public interface IProductCategoriesService : IService<Model.ProductCategories,ProductCategoriesSearchObject>
+    public interface IService<TModel, TSearch> where TSearch : BaseSearchObject
     {
-        
+        public PagedResult<TModel> GetPaged(TSearch search);
+
+        public TModel GetById(int id);
     }
 }

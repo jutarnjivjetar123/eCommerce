@@ -1,5 +1,8 @@
 using eCommerce.Services;
 using eCommerce.Services.Database;
+using eCommerce.Model;
+using eCommerce.Model.SearchObjects;
+using eCommerce.Services;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +29,7 @@ builder.Services.AddDbContext<eCommerceContext>(options =>
 builder.Services.AddMapster();
 
 builder.Services.AddTransient<IProductsService, ProductsService>();
+builder.Services.AddTransient<IService<eCommerce.Model.Products, eCommerce.Model.SearchObjects.ProductsSearchObject>>(provider => provider.GetRequiredService<IProductsService>());
 builder.Services.AddTransient<IUsersService, UsersService>();
 builder.Services.AddTransient<IProductCategoriesService, ProductCategoriesService>();
 

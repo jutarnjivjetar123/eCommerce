@@ -11,40 +11,28 @@ using System.Threading.Tasks;
 
 namespace eCommerce.Services
 {
-    public class ProductsService(
-            eCommerceContext dbContext,
-            IMapper mapper
-        ) : IProductsService
+    public class ProductsService : BaseService<Model.Products, ProductsSearchObject, Database.Products>, IProductsService
     {
 
-        private readonly eCommerceContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
-
-        public List<Model.Products> GetList(ProductsSearchObject searchObject)
+        public ProductsService(
+                eCommerceContext context,
+                IMapper mapper
+            ) : base(context, mapper)
         {
-            List<Model.Products> result = new();
+            
+        }
 
-            var query = _dbContext.Products.AsQueryable();
 
+        public override IQueryable<Database.Products> AddFilter(ProductsSearchObject search, IQueryable<Database.Products> query)
+        {
 
-            if (!string.IsNullOrWhiteSpace(searchObject.FTS)) {
+            var filteredQuery = base.AddFilter(search, query);
 
-                query = query.Where(
-                        x => x.Name.Contains(searchObject.FTS) ||
-                        x.Code.Contains(searchObject.FTS)
-                    );
+            if (!string.IsNullOrWhiteSpace(search.FTS)) {
+                filteredQuery = filteredQuery.Where(x => x.Name.Contains(search.FTS));
             }
 
-            if (searchObject.Page.HasValue && searchObject.PageSize.HasValue) {
-                query = query.Skip(searchObject.Page.Value * searchObject.PageSize.Value).Take(searchObject.PageSize.Value);
-            }
-
-            var list = query.ToList();
-
-            result = _mapper.Map(list, result);
-
-            return result;
+            return filteredQuery;
         }
     }
 }

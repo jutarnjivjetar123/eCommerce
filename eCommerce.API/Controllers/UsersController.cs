@@ -19,7 +19,7 @@ namespace eCommerce.API.Controllers
         [HttpGet]
         public PagedResult<Model.Users> GetList([FromQuery] UsersSearchObject searchObject) {
 
-            return _service.GetList(searchObject);
+            return _service.GetPaged(searchObject);
         }
 
         [HttpPost]

@@ -4,12 +4,9 @@ using System.Text;
 
 namespace eCommerce.Model.SearchObjects
 {
-    public class ProductsSearchObject
+    public class ProductsSearchObject : BaseSearchObject
     {
         public string? FTS { get; set; }
 
-        public int? Page { get; set; }
-
-        public int? PageSize { get; set; }
     }
 }

@@ -21,64 +21,102 @@ namespace eCommerce.Services
             eCommerceContext dbContext,
             IMapper mapper
 
-        ) : IUsersService
+        ) : BaseService<Model.Users, UsersSearchObject, Database.Users>(dbContext, mapper), IUsersService
     {
 
         private readonly eCommerceContext _dbContext = dbContext;
         private readonly IMapper _mapper = mapper;
-        
-        public virtual Model.PagedResult<Model.Users> GetList(UsersSearchObject searchObject)
+
+        public override IQueryable<Database.Users> AddFilter(UsersSearchObject search, IQueryable<Database.Users> query)
         {
+            var filteredQuery = base.AddFilter(search, query);
 
-            List<Model.Users> resultList = new List<Model.Users>();
+            if (!string.IsNullOrWhiteSpace(search.FirstNameGTE))
+            {
 
-            var query = _dbContext.Users.AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(searchObject.FirstNameGTE)) {
-
-                query = query.Where(x => x.FirstName.StartsWith(searchObject.FirstNameGTE));
+                filteredQuery = query.Where(x => x.FirstName.StartsWith(search.FirstNameGTE));
             }
-
-            if (!string.IsNullOrWhiteSpace(searchObject.LastNameGTE)) {
-                query = query.Where(x => x.LastName.StartsWith(searchObject.LastNameGTE));
-            }
-
-            if (!string.IsNullOrEmpty(searchObject.Email)) {
-                query = query.Where(x => x.Email == searchObject.Email);
-            }
-
-            if (!string.IsNullOrWhiteSpace(searchObject.Username)) { 
-                query = query.Where(x => x.Username == searchObject.Username);
-            }
-
-
-            int count = query.Count();
-
-            if (searchObject.IsUserRolesIncluded == true) {
-                query = query.Include(x => x.UserRoles).ThenInclude(x => x.Role);
-            }
-
-            if (searchObject.Page.HasValue && searchObject.PageSize.HasValue) {
-                query = query.Skip(searchObject.Page.Value * searchObject.PageSize.Value).Take(searchObject.PageSize.Value);
-            }
-
-            if (!string.IsNullOrWhiteSpace(searchObject.OrderBy)) {
-                query = query.OrderBy(searchObject.OrderBy);
-            }
-
             
 
-            var list = query.ToList();
-            
-            
-            resultList = _mapper.Map(list, resultList);
+            if (!string.IsNullOrWhiteSpace(search.LastNameGTE))
+            {
+                filteredQuery = query.Where(x => x.LastName.StartsWith(search.LastNameGTE));
+            }
 
-            Model.PagedResult<Model.Users> response = new();
+            if (!string.IsNullOrEmpty(search.Email))
+            {
+                filteredQuery = query.Where(x => x.Email == search.Email);
+            }
 
-            response.ResultList = resultList;
-            response.Count = count;
-            return response;
+            if (!string.IsNullOrWhiteSpace(search.Username))
+            {
+                filteredQuery = query.Where(x => x.Username == search.Username);
+            }
+
+            if (search.IsUserRolesIncluded.HasValue && search.IsUserRolesIncluded.Value) {
+                filteredQuery = query.Include(x => x.UserRoles).ThenInclude(x => x.Role);
+            }
+
+            if (!string.IsNullOrEmpty(search.OrderBy)) {
+                filteredQuery = filteredQuery.OrderBy(search.OrderBy);
+            }
+
+            return filteredQuery;
         }
+
+
+        //public virtual Model.PagedResult<Model.Users> GetList(UsersSearchObject searchObject)
+        //{
+
+            //    List<Model.Users> resultList = new List<Model.Users>();
+
+            //    var query = _dbContext.Users.AsQueryable();
+
+            //    if (!string.IsNullOrWhiteSpace(searchObject.FirstNameGTE)) {
+
+            //        query = query.Where(x => x.FirstName.StartsWith(searchObject.FirstNameGTE));
+            //    }
+
+            //    if (!string.IsNullOrWhiteSpace(searchObject.LastNameGTE)) {
+            //        query = query.Where(x => x.LastName.StartsWith(searchObject.LastNameGTE));
+            //    }
+
+            //    if (!string.IsNullOrEmpty(searchObject.Email)) {
+            //        query = query.Where(x => x.Email == searchObject.Email);
+            //    }
+
+            //    if (!string.IsNullOrWhiteSpace(searchObject.Username)) { 
+            //        query = query.Where(x => x.Username == searchObject.Username);
+            //    }
+
+
+            //    int count = query.Count();
+
+            //    if (searchObject.IsUserRolesIncluded == true) {
+            //        query = query.Include(x => x.UserRoles).ThenInclude(x => x.Role);
+            //    }
+
+            //    if (searchObject.Page.HasValue && searchObject.PageSize.HasValue) {
+            //        query = query.Skip(searchObject.Page.Value * searchObject.PageSize.Value).Take(searchObject.PageSize.Value);
+            //    }
+
+            //    if (!string.IsNullOrWhiteSpace(searchObject.OrderBy)) {
+            //        query = query.OrderBy(searchObject.OrderBy);
+            //    }
+
+
+
+            //    var list = query.ToList();
+
+
+            //    resultList = _mapper.Map(list, resultList);
+
+            //    Model.PagedResult<Model.Users> response = new();
+
+            //    response.ResultList = resultList;
+            //    response.Count = count;
+            //    return response;
+            //}
 
         public Model.Users Insert(UsersInsertRequest request)
         {

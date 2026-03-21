@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace eCommerce.Services
 {
-    public interface IProductsService
+    public interface IProductsService : IService<Model.Products, Model.SearchObjects.ProductsSearchObject>
     {
-        List<Model.Products> GetList(ProductsSearchObject searchObject);
+       
     }
 }

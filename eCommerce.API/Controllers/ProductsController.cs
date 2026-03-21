@@ -7,23 +7,10 @@ namespace eCommerce.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : BaseController<Products, ProductsSearchObject>
     {
-        protected IProductsService _service;
-        public ProductsController(
-                IProductsService service
-               )
+        public ProductsController(IService<Products, ProductsSearchObject> service) : base(service)
         {
-            _service = service;
-        }
-
-
-        [HttpGet]
-        public List<Products> GetList([FromQuery] ProductsSearchObject searchObject)
-        {
-
-            return _service.GetList(searchObject);
-
         }
     }
 }

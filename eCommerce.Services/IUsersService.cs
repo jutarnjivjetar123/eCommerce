@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace eCommerce.Services
 {
-    public interface IUsersService
+    public interface IUsersService : IService<Model.Users, UsersSearchObject>
     {
 
-        public PagedResult<Model.Users> GetList(UsersSearchObject searchObject);
+        
         public Model.Users Insert(UsersInsertRequest request);
         public Model.Users Update(int id, UsersUpdateRequest request);
     }
