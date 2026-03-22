@@ -21,7 +21,8 @@ namespace eCommerce.Services
             eCommerceContext dbContext,
             IMapper mapper
 
-        ) : BaseService<Model.Users, UsersSearchObject, Database.Users>(dbContext, mapper), IUsersService
+        ) : 
+        BaseCRUDService<eCommerce.Model.Users, UsersSearchObject, Database.Users, UsersInsertRequest, UsersUpdateRequest>(dbContext, mapper), IUsersService
     {
 
         private readonly eCommerceContext _dbContext = dbContext;
@@ -64,106 +65,51 @@ namespace eCommerce.Services
             return filteredQuery;
         }
 
-
-        //public virtual Model.PagedResult<Model.Users> GetList(UsersSearchObject searchObject)
-        //{
-
-            //    List<Model.Users> resultList = new List<Model.Users>();
-
-            //    var query = _dbContext.Users.AsQueryable();
-
-            //    if (!string.IsNullOrWhiteSpace(searchObject.FirstNameGTE)) {
-
-            //        query = query.Where(x => x.FirstName.StartsWith(searchObject.FirstNameGTE));
-            //    }
-
-            //    if (!string.IsNullOrWhiteSpace(searchObject.LastNameGTE)) {
-            //        query = query.Where(x => x.LastName.StartsWith(searchObject.LastNameGTE));
-            //    }
-
-            //    if (!string.IsNullOrEmpty(searchObject.Email)) {
-            //        query = query.Where(x => x.Email == searchObject.Email);
-            //    }
-
-            //    if (!string.IsNullOrWhiteSpace(searchObject.Username)) { 
-            //        query = query.Where(x => x.Username == searchObject.Username);
-            //    }
-
-
-            //    int count = query.Count();
-
-            //    if (searchObject.IsUserRolesIncluded == true) {
-            //        query = query.Include(x => x.UserRoles).ThenInclude(x => x.Role);
-            //    }
-
-            //    if (searchObject.Page.HasValue && searchObject.PageSize.HasValue) {
-            //        query = query.Skip(searchObject.Page.Value * searchObject.PageSize.Value).Take(searchObject.PageSize.Value);
-            //    }
-
-            //    if (!string.IsNullOrWhiteSpace(searchObject.OrderBy)) {
-            //        query = query.OrderBy(searchObject.OrderBy);
-            //    }
-
-
-
-            //    var list = query.ToList();
-
-
-            //    resultList = _mapper.Map(list, resultList);
-
-            //    Model.PagedResult<Model.Users> response = new();
-
-            //    response.ResultList = resultList;
-            //    response.Count = count;
-            //    return response;
-            //}
-
-        public Model.Users Insert(UsersInsertRequest request)
+        public override void BeforeInsert(UsersInsertRequest request, Database.Users entity)
         {
-            if (request.Password != request.PasswordConfirm) {
+            if (request.Password != request.PasswordConfirm)
+            {
                 throw new Exception("Lozinka i potvrda lozinke moraju biti isti!");
             }
-
-            var entity = new Database.Users();
-
-            _mapper.Map(request, entity);
 
             entity.PasswordSalt = PasswordHelper.GenerateSalt();
             entity.PasswordHash = PasswordHelper.GenerateHash(entity.PasswordSalt, request.Password);
 
-            _dbContext.Users.Add(entity);
-            _dbContext.SaveChanges();
-
-            return _mapper.Map<Model.Users>(entity);
-
+            base.BeforeInsert(request, entity);
         }
 
-        public Model.Users Update(int id, UsersUpdateRequest request)
+        public override void BeforeUpdate(UsersUpdateRequest request, Database.Users entity)
         {
-            var entity = _dbContext.Users.Find(id);
-
-            _mapper.Map(request, entity);
-
+            base.BeforeUpdate(request, entity);
+        }
 
 
-            if (request.Password != null) { 
+        //public Model.Users Update(int id, UsersUpdateRequest request)
+        //{
+        //    var entity = _dbContext.Users.Find(id);
+
+        //    _mapper.Map(request, entity);
+
+
+
+        //    if (request.Password != null) { 
             
 
-                if (request.Password != request.PasswordConfirm) {
-                    throw new Exception("Lozinka i potvrda lozinke moraju biti isti!");
-                }
+        //        if (request.Password != request.PasswordConfirm) {
+        //            throw new Exception("Lozinka i potvrda lozinke moraju biti isti!");
+        //        }
 
 
-                entity.PasswordSalt = PasswordHelper.GenerateSalt();
-                entity.PasswordHash = PasswordHelper.GenerateHash(entity.PasswordSalt, request.Password);
+        //        entity.PasswordSalt = PasswordHelper.GenerateSalt();
+        //        entity.PasswordHash = PasswordHelper.GenerateHash(entity.PasswordSalt, request.Password);
 
-            }
+        //    }
 
-            _dbContext.Users.Update(entity);
-            _dbContext.SaveChanges();
+        //    _dbContext.Users.Update(entity);
+        //    _dbContext.SaveChanges();
 
-            return _mapper.Map<Model.Users>(entity);
-        }
+        //    return _mapper.Map<Model.Users>(entity);
+        //}
 
         
     }

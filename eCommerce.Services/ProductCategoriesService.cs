@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace eCommerce.Services
 {
-    public class ProductCategoriesService(eCommerceContext context, IMapper mapper) : BaseService<Model.ProductCategories, ProductCategoriesSearchObject, Database.ProductCategories>(context, mapper), IProductCategoriesService
+    public class ProductCategoriesService(eCommerceContext context, IMapper mapper) : BaseService<eCommerce.Model.ProductCategories, ProductCategoriesSearchObject, Database.ProductCategories>(context, mapper), IProductCategoriesService
     {
     }
 }

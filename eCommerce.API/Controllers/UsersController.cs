@@ -9,28 +9,12 @@ namespace eCommerce.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController(
-            IUsersService service
-        ) : ControllerBase
+    public class UsersController : BaseCRUDController<Model.Users, UsersSearchObject, UsersInsertRequest, UsersUpdateRequest>
     {
-        private readonly IUsersService _service = service;
+        
 
-
-        [HttpGet]
-        public PagedResult<Model.Users> GetList([FromQuery] UsersSearchObject searchObject) {
-
-            return _service.GetPaged(searchObject);
-        }
-
-        [HttpPost]
-        public Model.Users Insert(UsersInsertRequest request) {
-            return _service.Insert(request);
-        }
-
-        [HttpPut("{id:int}")]
-        public Model.Users Update([FromRoute] int id, UsersUpdateRequest request) {
-
-            return _service.Update(id, request);
+        public UsersController(IUsersService service) : base(service)
+        {
         }
     }
 

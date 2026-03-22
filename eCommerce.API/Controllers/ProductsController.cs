@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using eCommerce.Model;
 using eCommerce.Services;
 using eCommerce.Model.SearchObjects;
+using eCommerce.Services.Model.Requests;
 namespace eCommerce.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : BaseController<Products, ProductsSearchObject>
+    public class ProductsController : BaseCRUDController<Products, ProductsSearchObject, ProductsInsertRequest, ProductsUpdateRequest>
     {
-        public ProductsController(IService<Products, ProductsSearchObject> service) : base(service)
+        public ProductsController(IProductsService service) : base(service)
         {
         }
     }

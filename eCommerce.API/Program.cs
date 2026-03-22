@@ -29,7 +29,6 @@ builder.Services.AddDbContext<eCommerceContext>(options =>
 builder.Services.AddMapster();
 
 builder.Services.AddTransient<IProductsService, ProductsService>();
-builder.Services.AddTransient<IService<eCommerce.Model.Products, eCommerce.Model.SearchObjects.ProductsSearchObject>>(provider => provider.GetRequiredService<IProductsService>());
 builder.Services.AddTransient<IUsersService, UsersService>();
 builder.Services.AddTransient<IProductCategoriesService, ProductCategoriesService>();
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace eCommerce.Services
 {
-    public interface IProductCategoriesService : IService<Model.ProductCategories,ProductCategoriesSearchObject>
+    public interface IProductCategoriesService : IService<ProductCategories,ProductCategoriesSearchObject>
     {
         
     }

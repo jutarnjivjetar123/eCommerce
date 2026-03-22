@@ -8,10 +8,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using eCommerce.Model;
+using eCommerce.Services.Model.Requests;
 namespace eCommerce.Services
 {
-    public class ProductsService : BaseService<Model.Products, ProductsSearchObject, Database.Products>, IProductsService
+    public class ProductsService : BaseCRUDService<eCommerce.Model.Products, ProductsSearchObject, Database.Products, ProductsInsertRequest, ProductsUpdateRequest>, IProductsService
     {
 
         public ProductsService(
@@ -33,6 +34,12 @@ namespace eCommerce.Services
             }
 
             return filteredQuery;
+        }
+
+        public override void BeforeInsert(ProductsInsertRequest request, Database.Products entity)
+        {
+            //TODO: throw exception if product code is existing
+            base.BeforeInsert(request, entity);
         }
     }
 }
