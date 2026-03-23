@@ -1,6 +1,10 @@
-﻿using eCommerce.Model;
+﻿using Azure.Core;
+using eCommerce.Model;
+using eCommerce.Model;
 using eCommerce.Model.SearchObjects;
 using eCommerce.Services.Database;
+using eCommerce.Services.Model.Requests;
+using eCommerce.Services.ProductsStateMachine;
 using MapsterMapper;
 using System;
 using System.Collections.Generic;
@@ -8,19 +12,20 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using eCommerce.Model;
-using eCommerce.Services.Model.Requests;
 namespace eCommerce.Services
 {
     public class ProductsService : BaseCRUDService<eCommerce.Model.Products, ProductsSearchObject, Database.Products, ProductsInsertRequest, ProductsUpdateRequest>, IProductsService
     {
 
+        private BaseProductsState _baseProductsState { get; set; }
+
         public ProductsService(
                 eCommerceContext context,
-                IMapper mapper
+                IMapper mapper,
+                BaseProductsState baseProductsState
             ) : base(context, mapper)
         {
-            
+            _baseProductsState = baseProductsState;
         }
 
 
@@ -36,10 +41,27 @@ namespace eCommerce.Services
             return filteredQuery;
         }
 
-        public override void BeforeInsert(ProductsInsertRequest request, Database.Products entity)
+        public override eCommerce.Model.Products Insert(ProductsInsertRequest request)
         {
-            //TODO: throw exception if product code is existing
-            base.BeforeInsert(request, entity);
+
+            var state = _baseProductsState.CreateState("initial");
+            return state.Insert(request);
+        }
+
+        public override eCommerce.Model.Products Update(int id, ProductsUpdateRequest request)
+        {
+            var entity = GetById(id);
+            var state = _baseProductsState.CreateState(entity.StateMachine);
+
+            return state.Update(id, request);
+        }
+
+        public eCommerce.Model.Products Activate(int id)
+        {
+            var entity = GetById(id);
+            var state = _baseProductsState.CreateState(entity.StateMachine);
+
+            return state.Activate(id);
         }
     }
 }

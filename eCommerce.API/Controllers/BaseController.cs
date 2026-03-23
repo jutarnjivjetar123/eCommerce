@@ -11,7 +11,7 @@ namespace eCommerce.API.Controllers
         where TSearch : BaseSearchObject
     {
 
-        private readonly IService<TModel, TSearch> _service;
+        protected new IService<TModel, TSearch> _service;
         public BaseController(
                 IService<TModel, TSearch> service
             )

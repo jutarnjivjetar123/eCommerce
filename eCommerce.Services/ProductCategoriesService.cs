@@ -1,4 +1,5 @@
 ﻿using eCommerce.Model;
+using eCommerce.Model.Requests;
 using eCommerce.Model.SearchObjects;
 using eCommerce.Services.Database;
 using MapsterMapper;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace eCommerce.Services
 {
-    public class ProductCategoriesService(eCommerceContext context, IMapper mapper) : BaseService<eCommerce.Model.ProductCategories, ProductCategoriesSearchObject, Database.ProductCategories>(context, mapper), IProductCategoriesService
+    public class ProductCategoriesService(eCommerceContext context, IMapper mapper) : BaseCRUDService<eCommerce.Model.ProductCategories, ProductCategoriesSearchObject, Database.ProductCategories, ProductCategoriesUpsertRequest, ProductCategoriesUpsertRequest>(context, mapper), IProductCategoriesService
     {
     }
 }

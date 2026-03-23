@@ -11,6 +11,6 @@ namespace eCommerce.Services
 {
     public interface IProductsService : ICRUDService<Products, ProductsSearchObject, ProductsInsertRequest, ProductsUpdateRequest>
     {
-       
+        public Products Activate(int id);
     }
 }

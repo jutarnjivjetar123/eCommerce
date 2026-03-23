@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 
 namespace eCommerce.Services
 {
-    public interface IProductCategoriesService : ICRUDService<ProductCategories,ProductCategoriesSearchObject, ProductCategoriesUpsertRequest, ProductCategoriesUpsertRequest>
+    public interface IUnitOfMeasureService : ICRUDService<UnitOfMeasures, UnitOfMeasureSearchObject, UnitOfMeasuresInsertRequest, UnitOfMeasuresUpdateRequest>
     {
-        
     }
 }

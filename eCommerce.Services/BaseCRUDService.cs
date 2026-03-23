@@ -18,7 +18,7 @@ namespace eCommerce.Services
         where TDbEntity : class
         
     {
-        public TModel Insert(TInsert request)
+        public virtual TModel Insert(TInsert request)
         {
 
             TDbEntity entity = mapper.Map<TDbEntity>(request);
@@ -37,7 +37,7 @@ namespace eCommerce.Services
             
         }
 
-        public TModel Update(int id, TUpdate request) {
+        public virtual TModel Update(int id, TUpdate request) {
 
             var set = context.Set<TDbEntity>();
 

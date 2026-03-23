@@ -13,5 +13,10 @@ namespace eCommerce.API.Controllers
         public ProductsController(IProductsService service) : base(service)
         {
         }
+
+        [HttpPut("{id:int}/activate")]
+        public Products Activate(int id) {
+            return (_service as IProductsService).Activate(id);
+        }
     }
 }

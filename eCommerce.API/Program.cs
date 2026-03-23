@@ -6,6 +6,7 @@ using eCommerce.Services;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using eCommerce.Services.ProductsStateMachine;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,8 +32,13 @@ builder.Services.AddMapster();
 builder.Services.AddTransient<IProductsService, ProductsService>();
 builder.Services.AddTransient<IUsersService, UsersService>();
 builder.Services.AddTransient<IProductCategoriesService, ProductCategoriesService>();
+builder.Services.AddTransient<IUnitOfMeasureService, UnitOfMeasuresService>();
 
 
+builder.Services.AddTransient<BaseProductsState>();
+builder.Services.AddTransient<InitialProductsState>();
+builder.Services.AddTransient<DraftProductState>();
+builder.Services.AddTransient<ActiveProductState>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
