@@ -18,5 +18,23 @@ namespace eCommerce.API.Controllers
         public Products Activate(int id) {
             return (_service as IProductsService).Activate(id);
         }
+
+        [HttpPut("{id:int}/edit")]
+        public Products Edit(int id)
+        {
+            return (_service as IProductsService).Edit(id);
+        }
+
+        [HttpPut("{id:int}/hide")]
+        public Products Hide(int id)
+        {
+            return (_service as IProductsService).Hide(id);
+        }
+
+        [HttpGet("{id:int}/allowedActions")]
+        public List<string> AllowedActions(int id)
+        {
+            return (_service as IProductsService).AllowedActions(id);
+        }
     }
 }

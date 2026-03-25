@@ -6,6 +6,7 @@ using eCommerce.Services.Database;
 using eCommerce.Services.Model.Requests;
 using eCommerce.Services.ProductsStateMachine;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,7 +19,7 @@ namespace eCommerce.Services
     {
 
         private BaseProductsState _baseProductsState { get; set; }
-
+        private eCommerceContext _dbContext { get; set; }
         public ProductsService(
                 eCommerceContext context,
                 IMapper mapper,
@@ -26,6 +27,7 @@ namespace eCommerce.Services
             ) : base(context, mapper)
         {
             _baseProductsState = baseProductsState;
+            _dbContext = context;
         }
 
 
@@ -62,6 +64,40 @@ namespace eCommerce.Services
             var state = _baseProductsState.CreateState(entity.StateMachine);
 
             return state.Activate(id);
+        }
+
+        public eCommerce.Model.Products Hide(int id)
+        {
+            var entity = GetById(id);
+            var state = _baseProductsState.CreateState(entity.StateMachine);
+
+            return state.Hide(id);
+        }
+
+        public eCommerce.Model.Products Edit(int id)
+        {
+            var entity = GetById(id);
+            var state = _baseProductsState.CreateState(entity.StateMachine);
+
+            return state.Edit(id);
+        }
+
+        public List<string> AllowedActions(int id)
+        {
+            if (id <= 0)
+            {
+                var state = _baseProductsState.CreateState("initial");
+
+                return state.AllowedActions(null);
+            }
+            else {
+
+                var entity = _dbContext.Products.Find(id);
+
+                var state = _baseProductsState.CreateState(entity.StateMachine);
+
+                return state.AllowedActions(entity);
+            }
         }
     }
 }

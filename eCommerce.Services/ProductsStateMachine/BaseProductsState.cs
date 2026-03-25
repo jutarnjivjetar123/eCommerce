@@ -38,6 +38,16 @@ namespace eCommerce.Services.ProductsStateMachine
             throw new Exception("Method not allowed");
         }
 
+        public virtual eCommerce.Model.Products Edit(int id)
+        {
+            throw new Exception("Method not allowed");
+        }
+
+        public virtual List<string> AllowedActions(Products entity) {
+
+            throw new Exception("Method not allowed");
+        }
+
         public BaseProductsState CreateState(string stateName) {
 
             switch (stateName)
@@ -48,6 +58,8 @@ namespace eCommerce.Services.ProductsStateMachine
                     return _serviceProvider.GetService<DraftProductState>();
                 case "active":
                     return _serviceProvider.GetService<ActiveProductState>();
+                case "hidden":
+                    return _serviceProvider.GetService<HiddenProductsState>();
                 default:
                     throw new Exception("State not recognized!");
             }

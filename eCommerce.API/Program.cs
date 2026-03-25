@@ -39,6 +39,7 @@ builder.Services.AddTransient<BaseProductsState>();
 builder.Services.AddTransient<InitialProductsState>();
 builder.Services.AddTransient<DraftProductState>();
 builder.Services.AddTransient<ActiveProductState>();
+builder.Services.AddTransient<HiddenProductsState>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

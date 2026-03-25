@@ -9,24 +9,24 @@ using System.Threading.Tasks;
 
 namespace eCommerce.Services.ProductsStateMachine
 {
-    public class ActiveProductState : BaseProductsState
+    public class HiddenProductsState : BaseProductsState
     {
         private eCommerceContext _dbContext;
         private IMapper _mapper;
 
-        public ActiveProductState(eCommerceContext dbContext, IMapper mapper, IServiceProvider serviceProvider) : base(dbContext, mapper, serviceProvider)
+        public HiddenProductsState(eCommerceContext dbContext, IMapper mapper, IServiceProvider serviceProvider) : base(dbContext, mapper, serviceProvider)
         {
             _dbContext = dbContext;
             _mapper = mapper;
         }
 
-        public override eCommerce.Model.Products Hide(int id)
+        public override eCommerce.Model.Products Edit(int id)
         {
             var set = _dbContext.Set<Database.Products>();
 
             var entity = set.Find(id);
 
-            entity.StateMachine = "hidden";
+            entity.StateMachine = "draft";
 
             _dbContext.SaveChanges();
 
@@ -37,7 +37,7 @@ namespace eCommerce.Services.ProductsStateMachine
 
         public override List<string> AllowedActions(Products entity)
         {
-            return new() { nameof(Hide) };
+            return new() { nameof(Edit) };
         }
     }
 }

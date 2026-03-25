@@ -35,6 +35,14 @@ namespace eCommerce.Services.ProductsStateMachine
 
         }
 
+        public override List<string> AllowedActions(Database.Products entity)
+        {
+            return new() { 
+               nameof(Insert),
+
+            };
+        }
+
         
     }
 }

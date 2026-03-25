@@ -47,5 +47,28 @@ namespace eCommerce.Services.ProductsStateMachine
             return _mapper.Map<eCommerce.Model.Products>(entity);
 
         }
+
+        public override eCommerce.Model.Products Hide(int id)
+        {
+            var set = _dbContext.Set<Database.Products>();
+
+            var entity = set.Find(id);
+
+            entity.StateMachine = "hidden";
+
+            _dbContext.SaveChanges();
+
+
+            return _mapper.Map<eCommerce.Model.Products>(entity);
+        }
+
+        public override List<string> AllowedActions(Database.Products entity)
+        {
+            return new() { 
+                nameof(Activate),
+                nameof(Update),
+                nameof(Hide)
+            };
+        }
     }
 }
